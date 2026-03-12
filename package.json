@@ -1,0 +1,45 @@
+{
+  "name": "@zakkster/lite-color",
+  "author": "Zahary Shinikchiev <shinikchiev@yahoo.com>",
+  "version": "1.0.0",
+  "description": "OKLCH color interpolation, multi-stop gradients, and CSS formatting for games and animations.",
+  "type": "module",
+  "main": "color.js",
+  "types": "color.d.ts",
+  "exports": {
+    ".": {
+      "types": "./color.d.ts",
+      "import": "./color.js",
+      "default": "./color.js"
+    }
+  },
+  "files": [
+    "color.js",
+    "color.d.ts",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@zakkster/lite-lerp": "^1.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "oklch",
+    "color",
+    "interpolation",
+    "gradient",
+    "lerp",
+    "game",
+    "css",
+    "hsl"
+  ]
+}
