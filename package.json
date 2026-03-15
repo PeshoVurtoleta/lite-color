@@ -1,7 +1,7 @@
 {
   "name": "@zakkster/lite-color",
   "author": "Zahary Shinikchiev <shinikchiev@yahoo.com>",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "OKLCH color interpolation, multi-stop gradients, and CSS formatting for games and animations.",
   "type": "module",
   "main": "color.js",
@@ -23,6 +23,15 @@
     "test:watch": "vitest"
   },
   "license": "MIT",
+  "homepage": "https://github.com/PeshoVurtoleta/-zakkster-lite-color#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeshoVurtoleta/-zakkster-lite-color.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PeshoVurtoleta/-zakkster-lite-color/issues",
+    "email": "shinikchiev@yahoo.com"
+  },
   "peerDependencies": {
     "@zakkster/lite-lerp": "^1.0.0"
   },
