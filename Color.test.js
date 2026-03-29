@@ -14,7 +14,7 @@ import {
     lerpOklch, toCssOklch, parseOklch,
     multiStopGradient, createGradient,
     reverseGradient, randomFromGradient
-} from './LiteColor.d.ts';
+} from './LiteColor.js';
 
 const red   = { l: 0.6, c: 0.25, h: 30 };
 const blue  = { l: 0.5, c: 0.20, h: 260 };
