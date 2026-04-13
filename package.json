@@ -1,7 +1,7 @@
 {
   "name": "@zakkster/lite-color",
   "author": "Zahary Shinikchiev <shinikchiev@yahoo.com>",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "OKLCH color interpolation, multi-stop gradients, and CSS formatting for games and animations.",
   "type": "module",
   "main": "Color.js",
@@ -33,7 +33,7 @@
     "email": "shinikchiev@yahoo.com"
   },
   "peerDependencies": {
-    "@zakkster/lite-lerp": "^1.0.3"
+    "@zakkster/lite-lerp": "^1.0.5"
   },
   "devDependencies": {
     "vitest": "^1.0.0"

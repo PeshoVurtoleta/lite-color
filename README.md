@@ -74,9 +74,11 @@ ctx.fillStyle = toCssOklch(heatmap(temperature));
 | Function | Description |
 |----------|-------------|
 | `lerpOklch(a, b, t)` | Interpolate two OKLCH colors. Clamps L, prevents negative C, shortest-path H. |
+| `lerpOklchTo(a, b, t, out)` | Zero-GC variant of lerpOklch. Writes directly into a caller-owned output object. |
 | `toCssOklch(color)` | Format to CSS: `oklch(0.7000 0.1500 120.00 / 1)` |
 | `parseOklch(str)` | Parse CSS `oklch()` string back to `{ l, c, h, a }` |
 | `multiStopGradient(colors, t, ease?)` | Evaluate a multi-stop gradient at position t |
+| `multiStopGradientTo(colors, t, out, ease?)` | Same as multiStopGradient, Zero-GC |
 | `createGradient(colors, ease?)` | Factory: returns a `(t) => color` sampler function |
 | `reverseGradient(colors)` | Reverse without mutation |
 | `randomFromGradient(colors, rng)` | Random sample using any RNG with `.next()` |

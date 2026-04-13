@@ -11,9 +11,11 @@ npm install @zakkster/lite-color
 ## Exports
 
 - `lerpOklch(a, b, t): OklchColor` — Interpolate between two OKLCH colors. Clamps lightness 0–1, prevents negative chroma, shortest-path hue interpolation.
+- `lerpOklchTo(a, b, t, out): OklchColor` - Zero-GC variant of lerpOklch. Writes directly into a caller-owned output object.
 - `toCssOklch({ l, c, h, a? }): string` — Format OKLCH object to CSS string: `oklch(0.7000 0.1500 120.00 / 1)`.
 - `parseOklch(str): OklchColor` — Parse CSS `oklch()` string back to `{ l, c, h, a }` object.
 - `multiStopGradient(colors, t, ease?): OklchColor` — Evaluate a multi-stop OKLCH gradient at position t (0–1). Optional easing function.
+- `multiStopGradientTo(colors, t, out, ease?)` - Same as multiStopGradient, Zero-GC.
 - `createGradient(colors, ease?): (t) => OklchColor` — Create a reusable gradient sampler function. Call the returned function with t (0–1).
 - `reverseGradient(colors): OklchColor[]` — Reverse a color array without mutating the original.
 - `randomFromGradient(colors, rng): OklchColor` — Pick a random color from anywhere along the gradient using a seeded RNG.

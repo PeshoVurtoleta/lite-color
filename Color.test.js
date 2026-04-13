@@ -11,10 +11,16 @@ vi.mock('@zakkster/lite-lerp', () => ({
 }));
 
 import {
-    lerpOklch, toCssOklch, parseOklch,
-    multiStopGradient, createGradient,
-    reverseGradient, randomFromGradient
-} from './LiteColor.js';
+    lerpOklch,
+    lerpOklchTo,
+    toCssOklch,
+    parseOklch,
+    multiStopGradient,
+    multiStopGradientTo,
+    createGradient,
+    reverseGradient,
+    randomFromGradient
+} from './Color.js';
 
 const red   = { l: 0.6, c: 0.25, h: 30 };
 const blue  = { l: 0.5, c: 0.20, h: 260 };
@@ -60,6 +66,51 @@ describe('🎨 lite-color', () => {
             const b = { l: 0.5, c: 0.1, h: 10 };
             const mid = lerpOklch(a, b, 0.5);
             const normalized = ((mid.h % 360) + 360) % 360;
+            expect(normalized).toBeCloseTo(0);
+        });
+    });
+
+    describe('lerpOklchTo() - Zero GC', () => {
+        it('mutates the provided out object and returns it', () => {
+            const out = { l: 0, c: 0, h: 0 };
+            const result = lerpOklchTo(red, blue, 0.5, out);
+
+            // Prove no new object was allocated (exact reference match)
+            expect(result).toBe(out);
+
+            // Prove the math is correct
+            expect(out.l).toBeCloseTo(0.55);
+            expect(out.c).toBeCloseTo(0.225);
+        });
+
+        it('clamps lightness to [0, 1]', () => {
+            const dark = { l: -0.5, c: 0.1, h: 0 };
+            const bright = { l: 1.5, c: 0.1, h: 0 };
+            const out = { l: 0, c: 0, h: 0 };
+
+            lerpOklchTo(dark, bright, 0, out);
+            expect(out.l).toBe(0);
+
+            lerpOklchTo(dark, bright, 1, out);
+            expect(out.l).toBe(1);
+        });
+
+        it('prevents negative chroma', () => {
+            const a = { l: 0.5, c: 0.01, h: 0 };
+            const b = { l: 0.5, c: -0.1, h: 0 };
+            const out = { l: 0, c: 0, h: 0 };
+
+            lerpOklchTo(a, b, 1, out);
+            expect(out.c).toBe(0);
+        });
+
+        it('uses shortest-path hue interpolation', () => {
+            const a = { l: 0.5, c: 0.1, h: 350 };
+            const b = { l: 0.5, c: 0.1, h: 10 };
+            const out = { l: 0, c: 0, h: 0 };
+
+            lerpOklchTo(a, b, 0.5, out);
+            const normalized = ((out.h % 360) + 360) % 360;
             expect(normalized).toBeCloseTo(0);
         });
     });
@@ -152,6 +203,66 @@ describe('🎨 lite-color', () => {
         it('clamps t to [0, 1]', () => {
             const result = multiStopGradient(stops, 1.5);
             expect(result.l).toBeCloseTo(blue.l);
+        });
+    });
+
+    describe('multiStopGradientTo() - Zero GC', () => {
+        const stops = [red, green, blue];
+
+        it('mutates the provided out object and returns it', () => {
+            const out = { l: 0, c: 0, h: 0 };
+            const result = multiStopGradientTo(stops, 0.5, out);
+
+            // Prove no new object was allocated
+            expect(result).toBe(out);
+
+            // At t=0.5 with [red, green, blue], it should hit exactly green
+            expect(out.l).toBeCloseTo(green.l);
+            expect(out.c).toBeCloseTo(green.c);
+            expect(out.h).toBeCloseTo(green.h);
+        });
+
+        it('writes first color at t=0', () => {
+            const out = { l: 0, c: 0, h: 0 };
+            multiStopGradientTo(stops, 0, out);
+            expect(out.l).toBeCloseTo(red.l);
+        });
+
+        it('writes last color at t=1', () => {
+            const out = { l: 0, c: 0, h: 0 };
+            multiStopGradientTo(stops, 1, out);
+            expect(out.l).toBeCloseTo(blue.l);
+        });
+
+        it('writes single color for 1-element array', () => {
+            const out = { l: 0, c: 0, h: 0 };
+            multiStopGradientTo([red], 0.5, out);
+            expect(out.l).toBe(red.l);
+            expect(out.c).toBe(red.c);
+            expect(out.h).toBe(red.h);
+        });
+
+        it('throws on empty array', () => {
+            const out = { l: 0, c: 0, h: 0 };
+            expect(() => multiStopGradientTo([], 0.5, out)).toThrow(/at least 1/);
+        });
+
+        it('accepts custom easing', () => {
+            const easeIn = (t) => t * t;
+            const outLinear = { l: 0, c: 0, h: 0 };
+            const outEased = { l: 0, c: 0, h: 0 };
+
+            multiStopGradientTo(stops, 0.5, outLinear);
+            multiStopGradientTo(stops, 0.5, outEased, easeIn);
+
+            // easeIn(0.5) = 0.25, so eased should be closer to the first color (red)
+            expect(outEased.l).toBeGreaterThan(outLinear.l - 0.3);
+        });
+
+        it('clamps t to [0, 1]', () => {
+            const out = { l: 0, c: 0, h: 0 };
+            multiStopGradientTo(stops, 1.5, out);
+            expect(out.l).toBeCloseTo(blue.l);
         });
     });
 
